@@ -1,6 +1,29 @@
+#==============================================================
+#VALIACIONES SI TIENE INSTALAADAS LAS LIBRERIAS SI NO EL SCRIPTLAS INSTALARA
+#=============================================================
+import subprocess
+import sys
+import importlib.util
+
+def instalar_si_falta(pip_name, import_name):
+    """Instala el paquete si no está disponible."""
+    if importlib.util.find_spec(import_name) is None:
+        print(f"Instalando {pip_name}...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", pip_name])
+
+instalar_si_falta("PyPDF2", "PyPDF2")
+instalar_si_falta("pandas", "pandas")
+instalar_si_falta("openpyxl", "openpyxl")
+
+
+
+#===============================================================
+# INICIO DE SCRIPT IMPORTAR LIBRERIAS PARA PODER EJECUTARSE
+#===============================================================
 import re
 import os
 import PyPDF2
+import pandas as pd
 
 
 def buscar_dato(patron, texto, flags=re.IGNORECASE):
@@ -131,8 +154,6 @@ def extraer_descripciones(texto):
 
 
     
-
-
 if __name__ == "__main__":
 
     carpeta = "sin_procesar"
@@ -171,3 +192,9 @@ if __name__ == "__main__":
             print(f"{campo}: {valor}")
 
     print(f"\nTotal de facturas procesadas: {len(facturas)}")
+
+
+    #Exortacion a un archivo xlsx
+    df = pd.DataFrame(facturas)
+    df.to_excel("facturas_procesadas.xlsx", index=False)
+    print(f"\nArchivo guardado: facturas_procesadas.xlsx")
